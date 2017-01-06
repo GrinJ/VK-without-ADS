@@ -1,0 +1,132 @@
+<html>
+<head>
+    <title>Настройки - VK Posts Filter</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="jquery.js"></script>
+    <script src="options.js"></script>
+    <link rel="stylesheet" type="text/css" href="options.css?ver=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Настройки VK Posts Filter</h1>      
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="nav nav-pills nav-stacked admin-menu">
+                    <li class="active"><a href="#" data-target-id="main-settings"><i class="fa fa-cogs fa-fw"></i>Основные настройки</a></li>
+                    <li><a href="#" data-target-id="words-filter"><i class="fa fa-list fa-fw"></i>Фильт слов</a></li>
+                    <li><a href="#" data-target-id="links-filter"><i class="fa fa-link fa-fw"></i>Фильтр ссылок</a></li>
+                    <li><a href="#" data-target-id="groups-filter"><i class="fa fa-users fa-fw"></i>Фильтр групп</a></li>
+                    <li><a href="#" data-target-id="about-project"><i class="fa fa-info-circle fa-fw"></i>О проекте</a></li>
+                </ul>
+            </div>
+            <div class="col-md-9 well admin-content" id="main-settings">
+                <h1 class="title">Основные настройки</h1>
+                <label class="ios7-switch in-line">                
+                    Скрыть рекомендации
+                    <input type="checkbox" checked id="adv-recommend">
+                    <span></span>
+                </label>
+                <label class="ios7-switch in-line">                
+                    Скрыть рекламные записи
+                    <input type="checkbox" checked id="adv-post">
+                    <span></span>
+                </label>
+                <label class="ios7-switch in-line">                
+                    Скрыть рекламный блок слева
+                    <input type="checkbox" checked id="adv-left">
+                    <span></span>
+                </label>
+                <label class="ios7-switch in-line">                
+                    Скрывать посты с "читать далее..."
+                    <input type="checkbox" checked id="adv-readmore">
+                    <span></span>
+                </label>
+            </div>
+            <div class="col-md-9 well admin-content" id="words-filter">
+                <h1 class="title">Фильтр слов</h1>
+                <p>Вы можете добавить или удалить слово, по которым будет происходить блокировка новости. Регистр не учитывается.</p>
+                <p>Пример синтаксиса:
+                    <ul>
+                        <li><strong>Опцион</strong> - будет происходить блокировка всех записей, содержащих слово "опцион"</li>
+                        <li><strong>Подпи(шись|саться|сывайся|шитесь)</strong> - будут блокироваться записи, содержащие любое из следующих слов: подпишись, подписаться, подписывайся или подпишитесь</li>
+                        <li><strong>Черная, блэк, маск(а|у), купить</strong> - будет блокироваться запись, в которой содержатся все эти слова в заданной форме</li>
+                    </ul>
+                </p>
+                <h3>Добавить выражение</h3>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <input type="text" id="new-word" class="form-control" placeholder="Введите фразу">
+                        <input type="hidden" value="" id="edit-id" />
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="add-word" class="btn btn-success">Добавить</button>
+                        <button type="submit" id="save-word" class="btn btn-success">Сохранить</button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="cancel-word" class="btn btn-danger">Отменить</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-xs-12">
+                        <ul class="list-group" id="words-list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 well admin-content" id="links-filter">
+                <h1 class="title">Фильтр ссылок</h1>
+                <p>Вы можете добавить или ссылку, из-за наличия которой будет происходить блокировка новости. Регист учитывается</p>
+                <p>Пример синтаксиса:
+                    <ul>
+                        <li><strong>http://vk.cc/asdf</strong> - будет происходить блокировка всех записей, содержащих ссылку http://vk.cc/asdf</li>
+                        <li><strong>http://site.com/*</strong> - будут блокироваться записи, содержащие ссылку на любую страницу сайта http://site.com</li>
+                    </ul>
+                </p>
+                <h3>Добавить ссылку</h3>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <input type="text" id="new-url" class="form-control" placeholder="Введите ссылку">
+                        <input type="hidden" value="" id="edit-id" />
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="add-url" class="btn btn-success">Добавить</button>
+                        <button type="submit" id="save-url" class="btn btn-success">Сохранить</button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="cancel-url" class="btn btn-danger">Отменить</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-xs-12">
+                        <ul class="list-group" id="urls-list"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 well admin-content" id="groups-filter">
+                 <h1 class="title">Фильтр групп</h1>
+            </div>
+            <div class="col-md-9 well admin-content" id="about-project">
+                <h1 class="title">О проекте</h1>
+                <p>Всем привет!</p>
+                <p>Если вы читаете данный текст, значит вам, как и мне, надоело видеть в своей ленте ВКонтакте рекламу черных масок, бинарных опционов, ставок на спорт, конкурсов за репост и прочей ненужной ерунды. </p>
+                <p>Данный проект носит некоммерческих характер. Мы не собираем, не храним и не передаем третьим лицами ни конфиденциальную информацию, ни общедоступную. Расширение не отправляет и не получает информацию с сторонних серверов.</p>
+                <p>Проект распространяется бесплатно, исходный код доступен в официальном репозитории на <a href="#github" target="_blank">GitHub</a> под лицензией LICENCE.</p>
+                <p>Вы всегда можете задать свой вопрос, предложить идею или сообщить об ошибке на <a href="#EC" target="_blank">странице проекта</a>.</p>
+                <p>В проекте используются следующие материалы и сторонние библиотеки:</p>
+                <ul>
+                    <li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
+                    <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></li>
+                    <li><a href="http://fontawesome.io/" target="_blank">Font Awesome</a></li>
+                    <li><a href="http://wd.dizaina.net/en/experiments/ios7-style-switch/" target="_blank">iOS 7 style switch</a></li>
+                    <li><a href="http://bootsnipp.com/snippets/2ev5" target="_blank">Account Management</a></li>
+                </ul>
+                <p>Версия <span class="version"></span>. Все права защищены © 2008-2017 <a href="https://www.easycoding.org/" target="_blank">EasyCoding Team</a>.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</htnl>
