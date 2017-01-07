@@ -1,3 +1,23 @@
+/*
+ * Модуль настроек расширения VK without ADS.
+ *
+ * Copyright 2011 - 2017 EasyCoding Team (ECTeam).
+ * Copyright 2005 - 2017 EasyCoding Team.
+ *
+ * Лицензия: GPL v3 (см. файл LICENSE.txt).
+ * Лицензия контента: Creative Commons 3.0 BY.
+ *
+ * Запрещается использовать этот файл при использовании любой
+ * лицензии, отличной от GNU GPL версии 3 и с ней совместимой.
+ *
+ * Официальный блог EasyCoding Team: http://www.easycoding.org/
+ * Официальная страница проекта: http://www.easycoding.org/projects/vkwithoutads
+ *
+ * Более подробная инфорация о программе в readme.txt,
+ * о лицензии - в LICENSE.txt.
+ */
+
+//Вызывает все необходимые функции в начале загрузки страницы
 $(document).ready(function()
 {
     var navItems = $('.admin-menu li > a');
@@ -19,6 +39,16 @@ $(document).ready(function()
 
     //Вызываем функцию, получающущю информацию о состоянии чекбоксах
     loadCheckboxes();
+
+    //Вызываем функцию добавления элементов в блок "Фильтр слов"
+    getWords();
+
+    //Вызываем функцию, выводящую номер версии
+    printAppVersion();
+});
+
+//Перехватывает все нажатия на кнопки
+$(document).ready(function () {
 
     //Вызывается при клике на кнопку "Добавить слово"
     $( "#add-word" ).click(function() {
@@ -51,35 +81,24 @@ $(document).ready(function()
         //Вызываем функцию для сохранения данных
         setCheckboxStatus(this.id, this.checked);
     });
-
-    //Вызываем функцию добавления элементов в блок "Фильтр слов"
-    getWords();
-
-    //Вызываем функцию, выводящую номер версии
-    printAppVersion();
 });
 
 //Устанавливаем состояние переключателей
 function loadCheckboxes() {
 
-    getCheckboxStatus("adv-recommend");
-    getCheckboxStatus("adv-post");
-    getCheckboxStatus("adv-left");
-    getCheckboxStatus("adv-readmore");
+    $.each(["adv-recommend", "adv-post", "adv-left", "adv-readmore"], function(index, value) {
+        getStringFromStorage(value, getCheckboxStatus);
+    });
 }
 
-//Получает информацию о состоянии чекбокса
-function getCheckboxStatus(name) {
+//Изменяет состояние чекбоксов
+function getCheckboxStatus(name, value) {
 
-    //Загружаем информацию о состоянии чекбокса
-    chrome.storage.local.get(name, function (result) {
-
-        //Если есть информация в настройках
-        if (result[name] == "unchecked") 
-            $("#" + name).attr('checked', false);
-        else
-            $("#" + name).attr('checked', true);
-    });
+    //Если есть информация в настройках
+    if (value == "unchecked")
+        $("#" + name).attr('checked', false);
+    else
+        $("#" + name).attr('checked', true);
 }
 
 //Сохраняет информацию о состоянии чекбокса
@@ -89,43 +108,53 @@ function setCheckboxStatus(name, status) {
     var value = status ? "checked" : "unchecked";
 
     //Сохраняем значение в хранилище
-    chrome.storage.local.set({[name]: value});
+    saveStringToStorage(name, value);
 }
 
 //Выгружает данные о словесных фильтрах из хранилища
 var wordsObj;
-function getWords() {
+function getWords(key = 'words') {
 
     //chrome.storage.local.clear();
 
     //Получаем данные о сохранненой информации
-    chrome.storage.local.get('words', function (result) {
-        //Получаем информацию о словах
+    chrome.storage.local.get(key, function (result) {
+
+        //Получаем информацию о сохраненных словах
         wordsList = result.words;
 
-        //Проверим, есть ли в хранилище список слов
-        if (typeof(wordsList) == "undefined") {
-            wordsList = '{"words": ["Вступ(и|ите|ай|айте)", "Подпи(шись|саться|сывайся|шитесь)", "Репост", "Добав(ь|ьте|ляем|ляй|ляйтесь|лю|ляю|ляемся|ить)", "Прогнозы на спорт", "Смотреть подробнее", "Kylie Jenner", "Олим Трейд", "Заработ(ать|ывай|тай)", "Распродажа, здесь", "Розыгрыш", "(Сделай|За) репост", "Пере(йди|йдите|ходи|ходим|ходите) по ссылк", "Зака(жи|жите|зывай) сейчас", "Депозит", "Опцион", "Черная, блэк, маск(а|у), купить"]}';
-        }
+        //Пробуем загрузить локалную базу данных
+        jQuery.getJSON("../data/data.json", function (data) {
 
-        //Читаем массив
-        wordsObj = jQuery.parseJSON(wordsList);
+            //Проверим, есть ли в хранилище список слов
+            if (typeof(wordsList) != "undefined") {
 
-        //Очищаем div со списком слов
-        $("#words-list").empty();
+                //Парсим в объект полученных из настроек данные
+                wordsObj = jQuery.parseJSON(wordsList);
+            }
+            else
+                wordsObj = data;
 
-        testObj = wordsObj.words;
+            //Вызываем функцию, отображающую данные
+            displayData(key, wordsObj);
+        });
+    });
+}
 
-        //Пробегаемся по всему полученному массиву
-        $.each(wordsObj.words.reverse(), function(index, value){
-            $("#words-list").append('<li class="list-group-item"> \
+//Отображает полученные данные
+function displayData(key, data) {
+    //Очищаем div со списком слов
+    $("#words-list").empty();
+
+    //Пробегаемся по всему полученному массиву и добавляем элементы
+    $.each(wordsObj[key].reverse(), function(index, value){
+        $("#" + key + "-list").append('<li class="list-group-item"> \
                                 <div class="buttons-action"> \
                                     <button type="submit" class="btn btn-success" id="editWord" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
                                     <button type="submit" class="btn btn-danger" id="deleteWord" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
                                 </div> \
                                 ' + value + ' \
                             </li>');
-        });
     });
 }
 
@@ -138,9 +167,7 @@ function addWord() {
         wordsObj.words.reverse().push($("#new-word").val());
 
         //Сохраняем значение
-        chrome.storage.local.set({
-            ['words']: JSON.stringify(wordsObj)
-        });
+        saveJSONToStorage('words', wordsObj);
 
         //Очищаем поле ввода
         $("#new-word").val("");
@@ -187,9 +214,7 @@ function deleteWord(id) {
         wordsObj.words.reverse();
 
         //Сохраняем значение
-        chrome.storage.local.set({
-            ['words']: JSON.stringify(wordsObj)
-        });
+        saveJSONToStorage('words', wordsObj);
 
         //Отображаем новый список слов
         getWords();
@@ -209,9 +234,7 @@ function saveWord() {
         wordsObj.words.reverse();
 
         //Сохраняем значение
-        chrome.storage.local.set({
-            ['words']: JSON.stringify(wordsObj)
-        });
+        saveJSONToStorage('words', wordsObj);
 
         //Очищаем поле ввода
         $("#new-word").val("");

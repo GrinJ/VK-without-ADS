@@ -7,13 +7,13 @@
   
 	"description": "Позволяет блокировать посты ВК в соответствии с заданным фильтром (c) 2008-2016 EasyCoding",
 	
-	"options_page": "options.html",
+	"options_page": "options/options.html",
 
 
 	 "content_scripts": [
 	    {
 	      "matches": ["*://vk.com/*"],
-	      "js": ["jquery.js", "vk.js"]
+	      "js": ["js/jquery.js", "background/vk.js"]
 	    }
   	],
 
@@ -22,12 +22,7 @@
 	],
   
 	"browser_action": {
-        "default_title": "Проверить наличие ключей",
-        "default_icon": "48x48.png",
-        "default_popup": "popup.html"
-	},
-
-	"web_accessible_resources": [
-		"48x48.png"
-	]
+        "default_title": "Включить расширение",
+        "default_popup": "popup/popup.html"
+	}
 }

@@ -1,8 +1,28 @@
+<!DOCTYPE html>
+    <!--
+    - Модуль настроек расширения VK without ADS.
+    -
+    - Copyright 2011 - 2017 EasyCoding Team (ECTeam).
+    - Copyright 2005 - 2017 EasyCoding Team.
+    -
+    - Лицензия: GPL v3 (см. файл LICENSE.txt).
+    - Лицензия контента: Creative Commons 3.0 BY.
+    -
+    - Запрещается использовать этот файл при использовании любой
+    - лицензии, отличной от GNU GPL версии 3 и с ней совместимой.
+    -
+    - Официальный блог EasyCoding Team: http://www.easycoding.org/
+    - Официальная страница проекта: http://www.easycoding.org/projects/vkwithoutads
+    -
+    - Более подробная инфорация о программе в readme.txt,
+    - о лицензии - в LICENSE.txt.
+    -->
 <html>
 <head>
-    <title>Настройки - VK Posts Filter</title>
+    <title>Настройки - VK без рекламы</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="../js/jquery.js"></script>
+    <script src="../js/functions.js"></script>
     <script src="options.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/options.css?ver=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,7 +30,7 @@
 <body>
     <div class="container">
         <div class="page-header">
-            <h1>Настройки VK Posts Filter</h1>      
+            <h1>Настройки «VK без рекламы»</h1>
         </div>
     </div>
     <div class="container">
@@ -90,7 +110,7 @@
                 <div class="row">
                     <div class="col-xs-8">
                         <input type="text" id="new-url" class="form-control" placeholder="Введите ссылку">
-                        <input type="hidden" value="" id="edit-id" />
+                        <input type="hidden" value="" id="edit-url" />
                     </div>
                     <div class="col-xs-2">
                         <button type="submit" id="add-url" class="btn btn-success">Добавить</button>
@@ -129,4 +149,4 @@
         </div>
     </div>
 </body>
-</htnl>
+</html>
