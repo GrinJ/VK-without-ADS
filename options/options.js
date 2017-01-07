@@ -51,28 +51,28 @@ $(document).ready(function()
 $(document).ready(function () {
 
     //Вызывается при клике на кнопку "Добавить слово"
-    $( "#add-word" ).click(function() {
-        addWord();
+    $( "#words-add" ).click(function() {
+        addWord('words');
     });
 
     //Вызывается при клике на кнопку "Отменить слово"
-    $( "#cancel-word" ).click(function() {
-        cancelWord();
+    $( "#words-cancel" ).click(function() {
+        cancelWord('words');
     });
 
     //Вызывается при клике на кнопку "Отменить слово"
-    $( "#save-word" ).click(function() {
-        saveWord();
+    $( "#words-save" ).click(function() {
+        saveWord('words');
     });
 
     //Вызывается при клике на кнопку "Редактировать слово"
-    $('body').on('click', 'button#editWord', function() {
-        editWord($(this).attr("data"));
+    $('body').on('click', 'button#edit-words', function() {
+        editWord('words', $(this).attr("data"));
     });
 
     //Вызывается при клике на кнопку "Редактировать слово"
-    $('body').on('click', 'button#deleteWord', function() {
-        deleteWord($(this).attr("data"));
+    $('body').on('click', 'button#delete-words', function() {
+        deleteWord('words', $(this).attr("data"));
     });
 
     //Вызвается при изменении статуса любоко чекбокса
@@ -105,14 +105,14 @@ function getCheckboxStatus(name, value) {
 function setCheckboxStatus(name, status) {
 
     //Получаем знчение
-    var value = status ? "checked" : "unchecked";
+    let value = status ? "checked" : "unchecked";
 
     //Сохраняем значение в хранилище
     saveStringToStorage(name, value);
 }
 
 //Выгружает данные о словесных фильтрах из хранилища
-var wordsObj;
+var wordsObj = null;
 function getWords(key = 'words') {
 
     //chrome.storage.local.clear();
@@ -144,68 +144,69 @@ function getWords(key = 'words') {
 //Отображает полученные данные
 function displayData(key, data) {
     //Очищаем div со списком слов
-    $("#words-list").empty();
+    $("#" + key + "-list").empty();
 
     //Пробегаемся по всему полученному массиву и добавляем элементы
     $.each(wordsObj[key].reverse(), function(index, value){
-        $("#" + key + "-list").append('<li class="list-group-item"> \
-                                <div class="buttons-action"> \
-                                    <button type="submit" class="btn btn-success" id="editWord" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
-                                    <button type="submit" class="btn btn-danger" id="deleteWord" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
-                                </div> \
-                                ' + value + ' \
-                            </li>');
+        $("#" + key + "-list").append(
+            '<li class="list-group-item"> \
+                <div class="buttons-action"> \
+                    <button type="submit" class="btn btn-success" id="edit-' + key + '" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
+                    <button type="submit" class="btn btn-danger" id="delete-' + key + '" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
+                </div> \
+                ' + value + ' \
+            </li>');
     });
 }
 
 //Добавляет новое слово в список
-function addWord() {
+function addWord(key) {
     //Если что-то ввели в форму ввода
-    if($("#new-word").val())
+    if($("#" + key + "-new").val())
     {
         //Добавляем новое слово
-        wordsObj.words.reverse().push($("#new-word").val());
+        wordsObj.words.reverse().push($("#" + key + "-new").val());
 
         //Сохраняем значение
         saveJSONToStorage('words', wordsObj);
 
         //Очищаем поле ввода
-        $("#new-word").val("");
+        $("#" + key + "-new").val("");
 
         //Отображаем новый список слов
-        getWords();
+        getWords(key);
     }
     else 
         alert('Пожалуйста, введите значение');
 }
 
 //Отменяет ввод нового слова
-function cancelWord() {
+function cancelWord(key) {
     //Очищаем поле ввода
-    $("#new-word").val("");
+    $("#" + key + "-new").val("");
 
     //Меняем кнопки
-    $("#add-word").show();
-    $("#save-word").hide();
+    $("#" + key + "-add").show();
+    $("#" + key + "-save").hide();
 }
 
 //Вызывается при клике на кнопку "Изменить"
-function editWord(id) {
+function editWord(key, id) {
 
     //Задаем значение
-    $("#new-word").val( wordsObj.words[id] );
-    $("#edit-id").val( id );
+    $("#" + key + "-new").val( wordsObj.words[id] );
+    $("#" + key + "-edit").val( id );
 
     //Меняем значение кнопки
-    $("#add-word").hide();
-    $("#save-word").show();
+    $("#" + key + "-add").hide();
+    $("#" + key + "-save").show();
 }
 
 //Вызывается пдля удаления элемента
-function deleteWord(id) {
+function deleteWord(key, id) {
 
     //Создаем подтверждающее уведомление
-    var message = confirm("Вы действительно хотите удалить объект \"" + wordsObj.words[id] + "\"");
+    var message = confirm("Вы действительно хотите удалить объект \"" + wordsObj[key][id] + "\"");
     if (message == true) {
         //Удаляем данный элемент
         wordsObj.words.splice(id, 1);
@@ -217,35 +218,35 @@ function deleteWord(id) {
         saveJSONToStorage('words', wordsObj);
 
         //Отображаем новый список слов
-        getWords();
+        getWords(key);
     }
 }
 
 //Вызывается для сохранения измененного слова
-function saveWord() {
+function saveWord(key) {
 
     //Проверим, введены ли не пустые значения
-    if($("#edit-id").val() && $("#new-word").val()) {
+    if($("#" + key + "-edit").val() && $("#" + key + "-new").val()) {
 
         //Меняем значение в массиве
-        wordsObj.words[ parseInt($("#edit-id").val()) ] = $("#new-word").val();
+        wordsObj[key][ parseInt($("#" + key + "-edit").val()) ] = $("#" + key + "-new").val();
 
         //Меняем массив местами
-        wordsObj.words.reverse();
+        wordsObj[key].reverse();
 
         //Сохраняем значение
-        saveJSONToStorage('words', wordsObj);
+        saveJSONToStorage(key, wordsObj);
 
         //Очищаем поле ввода
-        $("#new-word").val("");
-        $("#edit-id").val("");
+        $("#" + key + "-new").val("");
+        $("#" + key + "-edit").val("");
 
         //Меняем кнопки
-        $("#add-word").show();
-        $("#save-word").hide();
+        $("#" + key + "-add").show();
+        $("#" + key + "-save").hide();
 
         //Отображаем новый список слов
-        getWords();
+        getWords(key);
     }
     else 
         alert('Невозможно сохранить пустое значение');
