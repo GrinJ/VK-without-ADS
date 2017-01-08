@@ -17,6 +17,9 @@
  * о лицензии - в LICENSE.txt.
  */
 
+//Список глобальных переменных
+var wordsObj = {};
+
 //Вызывает все необходимые функции в начале загрузки страницы
 $(document).ready(function()
 {
@@ -40,7 +43,7 @@ $(document).ready(function()
     //Вызываем функцию, получающущю информацию о состоянии чекбоксах
     loadCheckboxes();
 
-    //Вызываем функцию добавления элементов в блок фильтров
+    //Добавляем необходимые элементы в списки
     $.each(["words", "url"], function(index, value) { getWords(value); });
 
     //Вызываем функцию, выводящую номер версии
@@ -112,7 +115,6 @@ function setCheckboxStatus(name, status) {
 }
 
 //Выгружает данные о словесных фильтрах из хранилища
-var wordsObj = null;
 function getWords(key) {
 
     //Пробуем получить данные из хранилища
@@ -122,6 +124,10 @@ function getWords(key) {
 //Преобразует полученную ифнормацию о словарях
 function prepareWords(key, result) {
 
+    //Проверим, создался ли объект
+    if (wordsObj[key] == undefined)
+        wordsObj[key] = {};
+
     //Пробуем загрузить локалную базу данных
     jQuery.getJSON("../data/data.json", function (data) {
 
@@ -129,10 +135,10 @@ function prepareWords(key, result) {
         if (typeof(result) != "undefined") {
 
             //Парсим в объект полученных из настроек данные
-            wordsObj = jQuery.parseJSON(result);
+            wordsObj[key] = jQuery.parseJSON(result)[key];
         }
         else
-            wordsObj = data;
+            wordsObj[key] = data[key];
 
         //Вызываем функцию, отображающую данные
         displayData(key, wordsObj);
@@ -193,7 +199,7 @@ function editWord(key, id) {
 
     //Задаем значение
     $("#" + key + "-new").val( wordsObj.words[id] );
-    $("#" + key + "-edit").val( id );
+    $("#" + key + "-id").val( id );
 
     //Меняем значение кнопки
     $("#" + key + "-add").hide();
@@ -223,11 +229,13 @@ function deleteWord(key, id) {
 //Вызывается для сохранения измененного слова
 function saveWord(key) {
 
+    Log(key);
+
     //Проверим, введены ли не пустые значения
-    if($("#" + key + "-edit").val() && $("#" + key + "-new").val()) {
+    if($("#" + key + "-id").val() && $("#" + key + "-new").val()) {
 
         //Меняем значение в массиве
-        wordsObj[key][ parseInt($("#" + key + "-edit").val()) ] = $("#" + key + "-new").val();
+        wordsObj[key][ parseInt($("#" + key + "-id").val()) ] = $("#" + key + "-new").val();
 
         //Меняем массив местами
         wordsObj[key].reverse();
@@ -237,7 +245,7 @@ function saveWord(key) {
 
         //Очищаем поле ввода
         $("#" + key + "-new").val("");
-        $("#" + key + "-edit").val("");
+        $("#" + key + "-id").val("");
 
         //Меняем кнопки
         $("#" + key + "-add").show();
