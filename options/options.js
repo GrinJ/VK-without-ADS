@@ -4,7 +4,7 @@
  * Copyright 2011 - 2017 EasyCoding Team (ECTeam).
  * Copyright 2005 - 2017 EasyCoding Team.
  *
- * Лицензия: GPL v3 (см. файл LICENSE.txt).
+ * Лицензия: GPL v3 (см. файл LICENSE).
  * Лицензия контента: Creative Commons 3.0 BY.
  *
  * Запрещается использовать этот файл при использовании любой
@@ -14,7 +14,7 @@
  * Официальная страница проекта: http://www.easycoding.org/projects/vkwithoutads
  *
  * Более подробная инфорация о программе в readme.txt,
- * о лицензии - в LICENSE.txt.
+ * о лицензии - в LICENSE.
  */
 
 //Список глобальных переменных
