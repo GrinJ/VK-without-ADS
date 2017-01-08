@@ -23,21 +23,15 @@ var wordsObj = {};
 //Вызывает все необходимые функции в начале загрузки страницы
 $(document).ready(function()
 {
-    var navItems = $('.admin-menu li > a');
-    var navListItems = $('.admin-menu li');
-    var allWells = $('.admin-content');
-    var allWellsExceptFirst = $('.admin-content:not(:first)');
-    
-    allWellsExceptFirst.hide();
-    navItems.click(function(e)
-    {
+    //Управляет боковым меню
+    $('.admin-content:not(:first)').hide();
+    $('.admin-menu li > a').click(function(e) {
         e.preventDefault();
-        navListItems.removeClass('active');
+        $('.admin-menu li').removeClass('active');
         $(this).closest('li').addClass('active');
-        
-        allWells.hide();
-        var target = $(this).attr('data-target-id');
-        $('#' + target).show();
+
+        $('.admin-content').hide();
+        $('#' + $(this).attr('data-target-id')).show();
     });
 
     //Вызываем функцию, получающущю информацию о состоянии чекбоксах
@@ -48,37 +42,35 @@ $(document).ready(function()
 
     //Вызываем функцию, выводящую номер версии
     printAppVersion();
-});
 
-//Перехватывает все нажатия на кнопки
-$(document).ready(function () {
+    //Вызывается при клике на какую-либо кнопку
+    $('body').on('click', 'button', function() {
 
-    //Вызывается при клике на кнопку "Добавить слово"
-    $( "#words-add" ).click(function() {
-        addWord('words');
+        //Получаем информацию о ключе и действии
+        let key = this.id.split("-")[0];
+        let action = this.id.split("-")[1];
+
+        //Вызываем необходимую функцию
+        switch (action) {
+            case "add":
+                return addWord(key);
+                break;
+            case "cancel":
+                return cancelWord(key);
+                break;
+            case "save":
+                return saveWord(key);
+                break;
+            case "edit":
+                return editWord(key, $(this).attr("data"));
+                break;
+            case "delete":
+                deleteWord(key, $(this).attr("data"));
+                break;
+        }
     });
 
-    //Вызывается при клике на кнопку "Отменить слово"
-    $( "#words-cancel" ).click(function() {
-        cancelWord('words');
-    });
-
-    //Вызывается при клике на кнопку "Отменить слово"
-    $( "#words-save" ).click(function() {
-        saveWord('words');
-    });
-
-    //Вызывается при клике на кнопку "Редактировать слово"
-    $('body').on('click', 'button#edit-words', function() {
-        editWord('words', $(this).attr("data"));
-    });
-
-    //Вызывается при клике на кнопку "Редактировать слово"
-    $('body').on('click', 'button#delete-words', function() {
-        deleteWord('words', $(this).attr("data"));
-    });
-
-    //Вызвается при изменении статуса любоко чекбокса
+    //Вызвается при изменении статуса любого чекбокса
     $(":checkbox").on('change', function() {
 
         //Вызываем функцию для сохранения данных
@@ -155,8 +147,8 @@ function displayData(key, data) {
         $("#" + key + "-list").append(
             '<li class="list-group-item"> \
                 <div class="buttons-action"> \
-                    <button type="submit" class="btn btn-success" id="edit-' + key + '" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
-                    <button type="submit" class="btn btn-danger" id="delete-' + key + '" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
+                    <button type="submit" class="btn btn-success" id="' + key + '-edit" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
+                    <button type="submit" class="btn btn-danger" id="' + key + '-delete" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
                 </div> \
                 ' + value + ' \
             </li>');
@@ -169,10 +161,10 @@ function addWord(key) {
     if($("#" + key + "-new").val())
     {
         //Добавляем новое слово
-        wordsObj.words.reverse().push($("#" + key + "-new").val());
+        wordsObj[key].reverse().push($("#" + key + "-new").val());
 
         //Сохраняем значение
-        saveJSONToStorage('words', wordsObj);
+        saveJSONToStorage(key, wordsObj);
 
         //Очищаем поле ввода
         $("#" + key + "-new").val("");
@@ -198,7 +190,7 @@ function cancelWord(key) {
 function editWord(key, id) {
 
     //Задаем значение
-    $("#" + key + "-new").val( wordsObj.words[id] );
+    $("#" + key + "-new").val( wordsObj[key][id] );
     $("#" + key + "-id").val( id );
 
     //Меняем значение кнопки
@@ -213,13 +205,13 @@ function deleteWord(key, id) {
     var message = confirm("Вы действительно хотите удалить объект \"" + wordsObj[key][id] + "\"");
     if (message == true) {
         //Удаляем данный элемент
-        wordsObj.words.splice(id, 1);
+        wordsObj[key].splice(id, 1);
 
         //Меняем массив местами
-        wordsObj.words.reverse();
+        wordsObj[key].reverse();
 
         //Сохраняем значение
-        saveJSONToStorage('words', wordsObj);
+        saveJSONToStorage(key, wordsObj);
 
         //Отображаем новый список слов
         getWords(key);
@@ -228,8 +220,6 @@ function deleteWord(key, id) {
 
 //Вызывается для сохранения измененного слова
 function saveWord(key) {
-
-    Log(key);
 
     //Проверим, введены ли не пустые значения
     if($("#" + key + "-id").val() && $("#" + key + "-new").val()) {
