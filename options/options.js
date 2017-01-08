@@ -41,7 +41,7 @@ $(document).ready(function()
     loadCheckboxes();
 
     //Вызываем функцию добавления элементов в блок "Фильтр слов"
-    getWords();
+    getWords('words');
 
     //Вызываем функцию, выводящую номер версии
     printAppVersion();
@@ -113,31 +113,29 @@ function setCheckboxStatus(name, status) {
 
 //Выгружает данные о словесных фильтрах из хранилища
 var wordsObj = null;
-function getWords(key = 'words') {
+function getWords(key) {
 
-    //chrome.storage.local.clear();
+    //Пробуем получить данные из хранилища
+    getStringFromStorage(key, prepareWords);
+}
 
-    //Получаем данные о сохранненой информации
-    chrome.storage.local.get(key, function (result) {
+//Преобразует полученную ифнормацию о словарях
+function prepareWords(key, result) {
 
-        //Получаем информацию о сохраненных словах
-        wordsList = result.words;
+    //Пробуем загрузить локалную базу данных
+    jQuery.getJSON("../data/data.json", function (data) {
 
-        //Пробуем загрузить локалную базу данных
-        jQuery.getJSON("../data/data.json", function (data) {
+        //Проверим, есть ли в хранилище список слов
+        if (typeof(result) != "undefined") {
 
-            //Проверим, есть ли в хранилище список слов
-            if (typeof(wordsList) != "undefined") {
+            //Парсим в объект полученных из настроек данные
+            wordsObj = jQuery.parseJSON(result);
+        }
+        else
+            wordsObj = data;
 
-                //Парсим в объект полученных из настроек данные
-                wordsObj = jQuery.parseJSON(wordsList);
-            }
-            else
-                wordsObj = data;
-
-            //Вызываем функцию, отображающую данные
-            displayData(key, wordsObj);
-        });
+        //Вызываем функцию, отображающую данные
+        displayData(key, wordsObj);
     });
 }
 
