@@ -38,7 +38,7 @@ $(document).ready(function()
     loadCheckboxes();
 
     //Добавляем необходимые элементы в списки
-    $.each(["words", "url"], function(index, value) { getWords(value); });
+    loadWords();
 
     //Вызываем функцию, выводящую номер версии
     printAppVersion();
@@ -104,6 +104,11 @@ function setCheckboxStatus(name, status) {
 
     //Сохраняем значение в хранилище
     saveStringToStorage(name, value);
+}
+
+//Загружает начальные списки фильтров
+function loadWords() {
+    $.each(["words", "url"], function(index, value) { getWords(value); });
 }
 
 //Выгружает данные о словесных фильтрах из хранилища
