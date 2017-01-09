@@ -19,10 +19,18 @@
 
 (function (){
 
+    //Создаем массив, в котором буем хранить информацию о том, какие блоки надо скрывать, а какие нет
+    let hideObj = [];
+
+    //Получаем информацию о состоянии всех чекбоксов
+    $.each(["adv-recommend", "adv-post", "adv-left", "adv-readmore"], function(index, value) {
+        getStringFromStorage(value, setHideStatus);
+    });
+
     //Вызываем главную функцию очистки ВК - вдруг мы уже на странице новостей
     clearPosts();
 
-   //Следим за изменением body, вдруг лента пропала или только появилась при навигации
+    //Следим за изменением body, вдруг лента пропала или только появилась при навигации
     let bodyObserver = new MutationObserver(function(mutations){
         mutations.map( function(mutation) {
 
@@ -54,6 +62,14 @@
             clearPosts();
         });
     });
+
+    //Устанавливает значение перменным, ответственным за скрытие или показ блоков
+    function setHideStatus(name, value) {
+
+        //Устанавливаем необходимое значение
+        hideObj[name] = value == "unchecked" ? false : true;
+    }
+
 
     //Очищает неугодные посты
     function clearPosts()
