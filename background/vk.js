@@ -75,13 +75,16 @@
     function clearPosts()
     {
         //Скрываем рекламные блок слева
-        $("#ads_left").remove();
+        if(hideObj["adv-left"])
+            $("#ads_left").remove();
 
         //Скрываем рекомендации в ленте
-        $(".ads_ads_news_wrap").remove();
+        if(hideObj["adv-recommend"])
+            $(".ads_ads_news_wrap").remove();
 
         //Скрываем сообщения "Рекламная запись"
-        $("[data-ad]").remove();
+        if(hideObj["adv-post"])
+            $("[data-ad]").remove();
 
 
         var myStringArray = ["Hello","World"];
