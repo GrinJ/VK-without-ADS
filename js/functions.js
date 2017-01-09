@@ -44,3 +44,10 @@ function saveJSONToStorage(key, value)
 function Log(message) {
     console.log("VK Posts Filter: " + message);
 }
+
+//Функция, которая возвращает массив настроек
+function getMainSettings(callback) {
+    jQuery.getJSON(chrome.extension.getURL("../data/data.json"), function (data) {
+        callback(data.settings);
+    });
+}

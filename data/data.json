@@ -24,5 +24,12 @@
   ],
   "repost" : [
     ""
+  ],
+  "settings" : [
+    "adv-recommend",
+    "adv-post",
+    "adv-left",
+    "adv-readmore",
+    "add-wall"
   ]
 }

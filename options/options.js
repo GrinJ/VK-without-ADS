@@ -35,7 +35,7 @@ $(document).ready(function()
     });
 
     //Вызываем функцию, получающущю информацию о состоянии чекбоксах
-    loadCheckboxes();
+    getMainSettings(loadCheckboxes);
 
     //Добавляем необходимые элементы в списки
     loadWords();
@@ -79,9 +79,9 @@ $(document).ready(function()
 });
 
 //Устанавливаем состояние переключателей
-function loadCheckboxes() {
+function loadCheckboxes(settings) {
 
-    $.each(["adv-recommend", "adv-post", "adv-left", "adv-readmore"], function(index, value) {
+    $.each(settings, function(index, value) {
         getStringFromStorage(value, getCheckboxStatus);
     });
 }

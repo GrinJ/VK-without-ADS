@@ -9,6 +9,11 @@
 	
 	"options_page": "options/options.html",
 
+  "web_accessible_resources": [
+
+    "data/data.json"
+
+    ],
 
 	 "content_scripts": [
 	    {

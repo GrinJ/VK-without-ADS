@@ -23,9 +23,7 @@
     let hideObj = [];
 
     //Получаем информацию о состоянии всех чекбоксов
-    $.each(["adv-recommend", "adv-post", "adv-left", "adv-readmore"], function(index, value) {
-        getStringFromStorage(value, setHideStatus);
-    });
+    getMainSettings(loadHideObj);
 
     //Вызываем главную функцию очистки ВК - вдруг мы уже на странице новостей
     clearPosts();
@@ -63,11 +61,16 @@
         });
     });
 
-    //Устанавливает значение перменным, ответственным за скрытие или показ блоков
-    function setHideStatus(name, value) {
+    //Обрабатывает данные, полученные из настроек
+    function loadHideObj(settings) {
+        $.each(settings, function(index, value) {
+            getStringFromStorage(value, setHideObj);
+        });
+    }
 
-        //Устанавливаем необходимое значение
-        hideObj[name] = value == "unchecked" ? false : true;
+    //Устанавливает значение перменным, ответственным за скрытие или показ блоков
+    function setHideObj(name, value) {
+        hideObj[name] = value != "unchecked";
     }
 
 
