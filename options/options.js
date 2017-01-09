@@ -153,8 +153,8 @@ function displayData(key, data) {
             $("#" + key + "-list").append(
                 '<li class="list-group-item"> \
                     <div class="buttons-action"> \
-                        <button type="submit" class="btn btn-success" id="' + key + '-edit" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
-                        <button type="submit" class="btn btn-danger" id="' + key + '-delete" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
+                        <button type="submit" class="btn btn-sm btn-success" id="' + key + '-edit" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
+                        <button type="submit" class="btn btn-sm btn-danger" id="' + key + '-delete" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
                     </div> \
                     ' + value + ' \
                 </li>');
