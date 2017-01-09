@@ -40,7 +40,7 @@
                     <li class="active"><a href="#" data-target-id="main-settings"><i class="fa fa-cogs fa-fw"></i>Основные настройки</a></li>
                     <li><a href="#" data-target-id="words-filter"><i class="fa fa-list fa-fw"></i>Фильт слов</a></li>
                     <li><a href="#" data-target-id="links-filter"><i class="fa fa-link fa-fw"></i>Фильтр ссылок</a></li>
-                    <li><a href="#" data-target-id="groups-filter"><i class="fa fa-users fa-fw"></i>Фильтр групп</a></li>
+                    <li><a href="#" data-target-id="groups-filter"><i class="fa fa-retweet fa-fw"></i>Фильтр репостов</a></li>
                     <li><a href="#" data-target-id="about-project"><i class="fa fa-info-circle fa-fw"></i>О проекте</a></li>
                 </ul>
             </div>
@@ -99,7 +99,7 @@
             </div>
             <div class="col-md-9 well admin-content" id="links-filter">
                 <h1 class="title">Фильтр ссылок</h1>
-                <p>Вы можете добавить или ссылку, из-за наличия которой будет происходить блокировка новости. Регист учитывается</p>
+                <p>Вы можете добавить или ссылку, из-за наличия которой будет происходить блокировка новости. Регист учитывается.</p>
                 <p>Пример синтаксиса:
                     <ul>
                         <li><strong>http://vk.cc/asdf</strong> - будет происходить блокировка всех записей, содержащих ссылку http://vk.cc/asdf</li>
@@ -127,7 +127,33 @@
                 </div>
             </div>
             <div class="col-md-9 well admin-content" id="groups-filter">
-                 <h1 class="title">Фильтр групп</h1>
+                <h1 class="title">Фильтр репостов</h1>
+                <p>Вы можете скрыть репосты любого человека или группы. В отличие от стандартной функции блокировки источника, вы будете видеть любую активность человека или группы в новостной ленте за исключением репостов. Репосты, содержащие коментарии, также будут скрыты.</p>
+                <p>Пример синтаксиса:
+                <ul>
+                    <li><strong>Иванов Иван</strong> - будет происходить блокировка всех записей Ивана Иванова, содержащих репосты</li>
+                    <li><strong>https://vk.com/user</strong> - будут блокироваться все записи с репостами от пользователя или группы https://vk.com/user</li>
+                </ul>
+                </p>
+                <h3>Добавить имя или ссылку</h3>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <input type="text" id="repost-new" class="form-control" placeholder="Введите ссылку">
+                        <input type="hidden" value="" id="repost-id" />
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="repost-add" class="btn btn-success">Добавить</button>
+                        <button type="submit" id="repost-save" class="btn btn-success">Сохранить</button>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="submit" id="repost-cancel" class="btn btn-danger">Отменить</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-xs-12">
+                        <ul class="list-group" id="repost-list"></ul>
+                    </div>
+                </div>
             </div>
             <div class="col-md-9 well admin-content" id="about-project">
                 <h1 class="title">О проекте</h1>

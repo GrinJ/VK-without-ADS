@@ -38,7 +38,7 @@
     margin-right: 5px;
 }
 
-#words-save, #url-save {
+#words-save, #url-save, #repost-save {
     display: none;
 }
 

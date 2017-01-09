@@ -108,7 +108,7 @@ function setCheckboxStatus(name, status) {
 
 //Загружает начальные списки фильтров
 function loadWords() {
-    $.each(["words", "url"], function(index, value) { getWords(value); });
+    $.each(["words", "url", "repost"], function(index, value) { getWords(value); });
 }
 
 //Выгружает данные о словесных фильтрах из хранилища
@@ -149,14 +149,15 @@ function displayData(key, data) {
 
     //Пробегаемся по всему полученному массиву и добавляем элементы
     $.each(wordsObj[key].reverse(), function(index, value){
-        $("#" + key + "-list").append(
-            '<li class="list-group-item"> \
-                <div class="buttons-action"> \
-                    <button type="submit" class="btn btn-success" id="' + key + '-edit" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
-                    <button type="submit" class="btn btn-danger" id="' + key + '-delete" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
-                </div> \
-                ' + value + ' \
-            </li>');
+        if(value != "")
+            $("#" + key + "-list").append(
+                '<li class="list-group-item"> \
+                    <div class="buttons-action"> \
+                        <button type="submit" class="btn btn-success" id="' + key + '-edit" data="' + index + '"><span class="glyphicon glyphicon-edit"></span></button> \
+                        <button type="submit" class="btn btn-danger" id="' + key + '-delete" data="' + index + '"><span class="glyphicon glyphicon-trash"></span></button> \
+                    </div> \
+                    ' + value + ' \
+                </li>');
     });
 }
 
