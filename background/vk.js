@@ -22,8 +22,14 @@
     //Создаем массив, в котором буем хранить информацию о том, какие блоки надо скрывать, а какие нет
     let hideObj = [];
 
+    //Массив, в котором буем хранить фразы для проверки записей
+    let wordsObj = [];
+
     //Получаем информацию о состоянии всех чекбоксов
     getMainSettings(loadHideObj);
+
+    //Получаем словарь
+    getWords();
 
     //Вызываем главную функцию очистки ВК - вдруг мы уже на странице новостей
     clearPosts();
@@ -55,6 +61,7 @@
         mutations.forEach(function(mutation){
             //Пишем в лог
             Log("found some new posts");
+            console.log(wordsObj);
 
             //Вызываем функцию очистки ВК
             clearPosts();
@@ -73,6 +80,36 @@
         hideObj[name] = value != "unchecked";
     }
 
+    //Выгружает данные о словесных фильтрах из хранилища
+    function getWords() {
+
+        //Пробегаемся по всем ключам
+        $.each(["words", "url", "repost"], function(index, value) {
+            getStringFromStorage(value, setWordsObj);
+        });
+    }
+
+    //Устанавливает значение словарей
+    function setWordsObj(key, result) {
+
+        //Проверим, создался ли объект
+        if (wordsObj[key] == undefined)
+            wordsObj[key] = {};
+
+        //Пробуем загрузить локалную базу данных
+        jQuery.getJSON(chrome.extension.getURL("../data/data.json"), function (data) {
+
+            //Проверим, есть ли в хранилище список слов
+            if (typeof(result) != "undefined") {
+
+                //Парсим в объект полученных из настроек данные
+                wordsObj[key] = jQuery.parseJSON(result)[key];
+            }
+            else
+                wordsObj[key] = data[key];
+        });
+    }
+
     //Очищает неугодные посты
     function clearPosts()
     {
@@ -88,20 +125,16 @@
         if(hideObj["adv-post"])
             $("[data-ad]").remove();
 
-
-        var myStringArray = ["Hello","World"];
-
         //Пробежимся по всем найденным постам
         $(document).find(".feed_row_unshown,.feed_row").not("filter-checked").each(function(){
 
             //Отвечает за то, нужно ли скрыть текущий блок или нет
-            var shouldHide = false;
+            let shouldHide = false;
 
             //Проверим, является ли этот пост рекламой в сообществе
-            if (!shouldHide) {
+            if (!shouldHide && hideObj["adv-wall"] ) {
 
                 if ($(this).find(".wall_marked_as_ads").length) {
-                    //$(this).find("div.page_block").css("background-color", "red");
                     shouldHide = true;
                 }
             }
