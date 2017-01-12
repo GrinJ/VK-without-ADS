@@ -180,11 +180,9 @@
 
                 //Проверим валидность ссылок, если они вообще присутствуют
                 if(!shouldHide && wordsRegex["url"] != "" && wordsRegex["url"] != undefined) {
-                    //Получаем все ссылки
-                    let wallLinks = $(this).find(".wall_text").find("a");
 
                     //Пробегаемся по всем найденным ссылкам, если их нет - код не выполнится
-                    $.each(wallLinks, function() {
+                    $.each($(this).find(".wall_text").find("a"), function() {
                         if (wordsRegex["url"].test($(this).text()) || wordsRegex["url"].test(this.href)) {
 
                             //Устанавливаем значение флага
