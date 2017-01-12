@@ -116,13 +116,13 @@
     //Загружает данные о регулярных выражениях
     function loadRegexp() {
         $.each(["words", "url", "repost"], function(index, value) {
-            wordsRegex[value] = wordsObj[value] != "" ? buildRegexp(value) : "";
+            wordsRegex[value] = wordsObj[value] != "" ? new RegExp(buildRegexp(value), 'ig') : undefined;
         });
     }
 
     //Строит регулярные выражения
     function buildRegexp(key) {
-        let output = "/";
+        let output = "";
 
         //Пробегаемся по каждому элементу в массиве
         wordsObj[key].forEach(function(element) {
@@ -132,7 +132,7 @@
         });
 
         //Возвращаем значение
-        return output.slice(0, -1) + "/ig";
+        return output.slice(0, -1) + "";
     }
 
     //Очищает неугодные посты
@@ -151,7 +151,7 @@
             $("[data-ad]").remove();
 
         //Если массив с фильтрами был создан и заполнен
-        if (wordsObj != []) {
+        if (wordsRegex != []) {
 
             //Пробежимся по всем найденным постам, которые еще не обрабатывали до этого
             $(document).find(".feed_row_unshown,.feed_row").not("filter-checked").each(function () {
@@ -162,10 +162,28 @@
                 //Проверим, является ли этот пост рекламой в сообществе
                 if (!shouldHide && hideObj["adv-wall"]) {
 
+                    //Если пристуствует элемент в надписью "Реклама в сообществе"
                     if ($(this).find(".wall_marked_as_ads").length) {
                         shouldHide = true;
                     }
                 }
+
+                //Проверим, соответствует ли текст записи введенным параметрам
+                if(!shouldHide && wordsRegex["words"] != "" && wordsRegex["words"] != undefined)
+                {
+                    //Получаем элемент
+                    let wallText = $(this).find(".wall_text");
+
+                    //Если удалось найти текст в данной записи
+                    if(wallText.length) {
+                        //Проверяем на соотвествтие нашим фильтрам
+                        if(wordsRegex["words"].test(wallText.text()))
+                            shouldHide = true;
+                    }
+                }
+
+
+
 
                 //test = $(this).find("div.page_block");
 
