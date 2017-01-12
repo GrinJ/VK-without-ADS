@@ -123,10 +123,12 @@
     //Строит регулярные выражения
     function buildRegexp(key) {
 
+        //Делаем замену в каждом элементе массива и возвращаем как строку
         return wordsObj[key].map(function(x){
-           x = x.includes(",") ? "(?=.*" + x.replace(/,( |)/g, ")(?=.*") + ")" : x;
+            x = x.includes(",") ? "(?=.*" + x.replace(/,( |)/g, ")(?=.*") + ")" : x;
 
-           return x.replace(/\//g, "\\/");
+            //Делаем замену слешей для ссылок
+            return x.replace(/\//g, "\\/");
         }).join("|");
     }
 
@@ -164,8 +166,7 @@
                 }
 
                 //Проверим, соответствует ли текст записи введенным параметрам
-                if(!shouldHide && wordsRegex["words"] != "" && wordsRegex["words"] != undefined)
-                {
+                if(!shouldHide && wordsRegex["words"] != "" && wordsRegex["words"] != undefined) {
                     //Получаем элемент
                     let wallText = $(this).find(".wall_text");
 
@@ -175,6 +176,24 @@
                         if(wordsRegex["words"].test(wallText.text()))
                             shouldHide = true;
                     }
+                }
+
+                //Проверим валидность ссылок, если они вообще присутствуют
+                if(!shouldHide && wordsRegex["url"] != "" && wordsRegex["url"] != undefined) {
+                    //Получаем все ссылки
+                    let wallLinks = $(this).find(".wall_text").find("a");
+
+                    //Пробегаемся по всем найденным ссылкам, если их нет - код не выполнится
+                    $.each(wallLinks, function() {
+                        if (wordsRegex["url"].test($(this).text()) || wordsRegex["url"].test(this.href)) {
+
+                            //Устанавливаем значение флага
+                            shouldHide = true;
+
+                            //Выходим из цикла
+                            return false;
+                        }
+                    });
                 }
 
                 //Проверим, надо ли удалить скрыть этот блок - если надо - скрываем
