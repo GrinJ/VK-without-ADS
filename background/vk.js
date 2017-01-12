@@ -122,17 +122,12 @@
 
     //Строит регулярные выражения
     function buildRegexp(key) {
-        let output = "";
 
-        //Пробегаемся по каждому элементу в массиве
-        wordsObj[key].forEach(function(element) {
+        return wordsObj[key].map(function(x){
+           x = x.includes(",") ? "(?=.*" + x.replace(/,( |)/g, ")(?=.*") + ")" : x;
 
-            //Строим регулярное выражение
-            output += (element.includes(",") ? "(?=.*" + element.replace(/,( |)/g, ")(?=.*").replace(/\//g, "\\/") : "(" + element.replace(/,( |)/g, "|")).replace(/\//g, "\\/") + ")|" ;
-        });
-
-        //Возвращаем значение
-        return output.slice(0, -1) + "";
+           return x.replace(/\//g, "\\/");
+        }).join("|");
     }
 
     //Очищает неугодные посты
