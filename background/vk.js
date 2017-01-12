@@ -182,23 +182,6 @@
                     }
                 }
 
-
-
-
-                //test = $(this).find("div.page_block");
-
-                //test.css( "background-color", "blue" );
-
-                /*if($(this).text().indexOf("ГУМ") != -1) {
-                 //	$(this).remove();
-
-                 test = $(this).find("div.page_block");
-
-                 console.log(test);
-
-                 test.css( "background-color", "red" );
-                 }*/
-
                 //Проверим, надо ли удалить скрыть этот блок - если надо - скрываем
                 if (shouldHide)
                 //$(this).remove();
