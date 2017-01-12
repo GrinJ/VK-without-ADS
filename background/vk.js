@@ -22,8 +22,9 @@
     //Создаем массив, в котором буем хранить информацию о том, какие блоки надо скрывать, а какие нет
     let hideObj = [];
 
-    //Массив, в котором буем хранить фразы для проверки записей
+    //Массивы, в которых буем хранить фразы для проверки записей
     let wordsObj = [];
+    let wordsRegex = [];
 
     //Получаем информацию о состоянии всех чекбоксов
     getMainSettings(loadHideObj);
@@ -44,7 +45,8 @@
                 //Пишем в лог
                 Log('found the feed, starts working');
 
-                Log(buildRegexp('url'));
+                //Загружаем все регулярные выражения
+                loadRegexp();
 
                 //Запускаем функцию очистки
                 clearPosts();
@@ -108,6 +110,13 @@
             }
             else
                 wordsObj[key] = data[key];
+        });
+    }
+
+    //Загружает данные о регулярных выражениях
+    function loadRegexp() {
+        $.each(["words", "url", "repost"], function(index, value) {
+            wordsRegex[value] = wordsObj[value] != "" ? buildRegexp(value) : "";
         });
     }
 
