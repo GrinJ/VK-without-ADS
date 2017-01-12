@@ -44,7 +44,7 @@
                 //Пишем в лог
                 Log('found the feed, starts working');
 
-                Log(buildRegexp('words'));
+                Log(buildRegexp('url'));
 
                 //Запускаем функцию очистки
                 clearPosts();
@@ -119,7 +119,7 @@
         wordsObj[key].forEach(function(element) {
 
             //Строим регулярное выражение
-            output += (element.includes(",") ? "(?=.*" + element.replace(/,( |)/g, ")(?=.*") : "(" + element.replace(/,( |)/g, "|")) + ")|" ;
+            output += (element.includes(",") ? "(?=.*" + element.replace(/,( |)/g, ")(?=.*").replace(/\//g, "\\/") : "(" + element.replace(/,( |)/g, "|")).replace(/\//g, "\\/") + ")|" ;
         });
 
         //Возвращаем значение
