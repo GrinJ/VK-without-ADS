@@ -44,6 +44,8 @@
                 //Пишем в лог
                 Log('found the feed, starts working');
 
+                Log(buildRegexp('words'));
+
                 //Запускаем функцию очистки
                 clearPosts();
 
@@ -61,7 +63,6 @@
         mutations.forEach(function(mutation){
             //Пишем в лог
             Log("found some new posts");
-            console.log(wordsObj);
 
             //Вызываем функцию очистки ВК
             clearPosts();
@@ -110,6 +111,21 @@
         });
     }
 
+    //Строит регулярные выражения
+    function buildRegexp(key) {
+        let output = "/";
+
+        //Пробегаемся по каждому элементу в массиве
+        wordsObj[key].forEach(function(element) {
+
+            //Строим регулярное выражение
+            output += (element.includes(",") ? "(?=.*" + element.replace(/,( |)/g, ")(?=.*") : "(" + element.replace(/,( |)/g, "|")) + ")|" ;
+        });
+
+        //Возвращаем значение
+        return output.slice(0, -1) + "/ig";
+    }
+
     //Очищает неугодные посты
     function clearPosts()
     {
@@ -125,44 +141,48 @@
         if(hideObj["adv-post"])
             $("[data-ad]").remove();
 
-        //Пробежимся по всем найденным постам
-        $(document).find(".feed_row_unshown,.feed_row").not("filter-checked").each(function(){
+        //Если массив с фильтрами был создан и заполнен
+        if (wordsObj != []) {
 
-            //Отвечает за то, нужно ли скрыть текущий блок или нет
-            let shouldHide = false;
+            //Пробежимся по всем найденным постам, которые еще не обрабатывали до этого
+            $(document).find(".feed_row_unshown,.feed_row").not("filter-checked").each(function () {
 
-            //Проверим, является ли этот пост рекламой в сообществе
-            if (!shouldHide && hideObj["adv-wall"] ) {
+                //Флаг, отвечающий за то, нужно ли скрыть текущий блок или нет
+                let shouldHide = false;
 
-                if ($(this).find(".wall_marked_as_ads").length) {
-                    shouldHide = true;
+                //Проверим, является ли этот пост рекламой в сообществе
+                if (!shouldHide && hideObj["adv-wall"]) {
+
+                    if ($(this).find(".wall_marked_as_ads").length) {
+                        shouldHide = true;
+                    }
                 }
-            }
 
-            //test = $(this).find("div.page_block");
+                //test = $(this).find("div.page_block");
 
-            //test.css( "background-color", "blue" );
+                //test.css( "background-color", "blue" );
 
-            /*if($(this).text().indexOf("ГУМ") != -1) {
-             //	$(this).remove();
+                /*if($(this).text().indexOf("ГУМ") != -1) {
+                 //	$(this).remove();
 
-             test = $(this).find("div.page_block");
+                 test = $(this).find("div.page_block");
 
-             console.log(test);
+                 console.log(test);
 
-             test.css( "background-color", "red" );
-             }*/
+                 test.css( "background-color", "red" );
+                 }*/
 
-            //Проверим, надо ли удалить скрыть этот блок - если надо - скрываем
-            if (shouldHide)
-            //$(this).remove();
-                $(this).find("div.page_block").css("background-color", "red");
-            else
-                $(this).find("div.page_block").css("background-color", "blue");
+                //Проверим, надо ли удалить скрыть этот блок - если надо - скрываем
+                if (shouldHide)
+                //$(this).remove();
+                    $(this).find("div.page_block").css("background-color", "red");
+                else
+                    $(this).find("div.page_block").css("background-color", "blue");
 
-            //Добавляем в конце особый класс, чтобы не проверять одни и те же блоки по несколько раз
-            $(this).addClass("filter-checked");
+                //Добавляем в конце особый класс, чтобы не проверять одни и те же блоки по несколько раз
+                $(this).addClass("filter-checked");
 
-        });
+            });
+        }
     }
 })();
