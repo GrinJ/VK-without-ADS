@@ -165,14 +165,15 @@
                     }
                 }
 
+                //Получаем содержимое текста новости
+                let wallText = $(this).find(".wall_text");
+
                 //Проверим, соответствует ли текст записи введенным параметрам
                 if(!shouldHide && wordsRegex["words"] != "" && wordsRegex["words"] != undefined) {
-                    //Получаем элемент
-                    let wallText = $(this).find(".wall_text");
 
                     //Если удалось найти текст в данной записи
                     if(wallText.length) {
-                        //Проверяем на соотвествтие нашим фильтрам
+                        //Проверяем на соответствие фильтру пользователя
                         if(wordsRegex["words"].test(wallText.text()))
                             shouldHide = true;
                     }
@@ -182,7 +183,7 @@
                 if(!shouldHide && wordsRegex["url"] != "" && wordsRegex["url"] != undefined) {
 
                     //Пробегаемся по всем найденным ссылкам, если их нет - код не выполнится
-                    $.each($(this).find(".wall_text").find("a"), function() {
+                    $.each(wallText.find("a"), function() {
                         if (wordsRegex["url"].test($(this).text()) || wordsRegex["url"].test(this.href)) {
 
                             //Устанавливаем значение флага
@@ -192,6 +193,20 @@
                             return false;
                         }
                     });
+                }
+
+                //Проверим наличие репостов в данной записи
+                if(!shouldHide && wordsRegex["repost"] != "" && wordsRegex["repost"] != undefined) {
+
+                    //Если в записи пристутствует репост какой-либо другой записи
+                    if(wallText.find(".copy_quote").length) {
+                        //Получаем элемент, содержащий автора записи
+                        let author = $(this).find(".author");
+
+                        //Проверяем на соответствие фильтру
+                        if(wordsRegex["repost"].test("https://vk.com" + author.attr('href')) || wordsRegex["repost"].test(author.text()))
+                            shouldHide = true;
+                    }
                 }
 
                 //Проверим, надо ли удалить скрыть этот блок - если надо - скрываем
