@@ -125,10 +125,14 @@
 
         //Делаем замену в каждом элементе массива и возвращаем как строку
         return wordsObj[key].map(function(x){
-            x = x.includes(",") ? "(?=.*" + x.replace(/,( |)/g, ")(?=.*") + ")" : x;
+            if(x != "") {
+                x = x.includes(",") ? "(?=.*" + x.replace(/,( |)/g, ")(?=.*") + ")" : x;
 
-            //Делаем замену слешей для ссылок
-            return x.replace(/\//g, "\\/");
+                //Делаем замену слешей для ссылок
+                return x.replace(/\//g, "\\/");
+            }
+            else
+                return "filter has empty value";
         }).join("|");
     }
 
